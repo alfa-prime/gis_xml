@@ -10,7 +10,7 @@ app = FastAPI(
     root_path="/gis_oms",
     title="GIS-OMS",
     description="GIS-OMS",
-    version="0.0.1",
+    version="0.1.0",
 )
 
 
