@@ -3,15 +3,18 @@ import sys
 
 from loguru import logger
 
-# from app.core.config import get_settings
-
-# settings = get_settings()
-
 
 class InterceptHandler(logging.Handler):
     """Перенаправляет стандартный logging в Loguru."""
 
     def emit(self, record: logging.LogRecord) -> None:
+        # Не дублируем traceback HTTP-ошибок: их уже пишет глобальный handler.
+        if (
+            record.name == "uvicorn.error"
+            and record.getMessage() == "Exception in ASGI application"
+        ):
+            return
+
         try:
             level = logger.level(record.levelname).name
         except ValueError:
@@ -32,7 +35,6 @@ class InterceptHandler(logging.Handler):
 
 def configure_logger(log_level: str = "INFO") -> None:
     """Настраивает логирование приложения."""
-
     logger.remove()
 
     logger.configure(
@@ -41,7 +43,6 @@ def configure_logger(log_level: str = "INFO") -> None:
         }
     )
 
-    # Консоль
     logger.add(
         sys.stderr,
         level=log_level.upper(),
@@ -58,7 +59,6 @@ def configure_logger(log_level: str = "INFO") -> None:
         diagnose=False,
     )
 
-    # Общий лог
     logger.add(
         "logs/app.log",
         level="INFO",
@@ -76,7 +76,6 @@ def configure_logger(log_level: str = "INFO") -> None:
         encoding="utf-8",
     )
 
-    # Ошибки
     logger.add(
         "logs/errors.log",
         level="ERROR",
@@ -106,12 +105,7 @@ def configure_logger(log_level: str = "INFO") -> None:
         "uvicorn",
         "uvicorn.error",
         "fastapi",
-        # "gunicorn",
-        # "gunicorn.error",
     ):
         std_logger = logging.getLogger(logger_name)
         std_logger.handlers = [InterceptHandler()]
         std_logger.propagate = False
-
-
-# configure_logger(settings.logs_level)
