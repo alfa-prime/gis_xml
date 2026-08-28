@@ -32,7 +32,7 @@ class LoggingMiddleware:
         client_ip = client[0] if client else "-"
 
         started_at = time.perf_counter()
-        status_code = status_code_default = 500
+        status_code = 500
 
         async def send_wrapper(message: Message) -> None:
             nonlocal status_code
@@ -69,6 +69,6 @@ class LoggingMiddleware:
                     "Ответ | {} {} | status={} | {:.2f} ms",
                     method,
                     path,
-                    status_code if status_code else status_code_default,
+                    status_code,
                     elapsed,
                 )
