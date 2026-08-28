@@ -1,9 +1,10 @@
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 
 class Settings(BaseSettings):
-    APP_API_KEY: str
+    app_api_key: str = Field(validation_alias="APP_API_KEY")
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -11,7 +12,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     return Settings() # noqa
 
