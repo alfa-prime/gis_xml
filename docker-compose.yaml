@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: gis-oms-xml
+    env_file:
+      - .env
     restart: unless-stopped
     ports:
       - "8000:8000"

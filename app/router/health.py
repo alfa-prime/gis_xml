@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Security
 
-router = APIRouter(prefix="/health", tags=["Health"])
+from app.core.dependencies import verify_api_key
+
+router = APIRouter(prefix="/health", tags=["Health"], dependencies=[Security(verify_api_key)])
 
 
 @router.get(

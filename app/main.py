@@ -11,6 +11,7 @@ app = FastAPI(
     title="GIS-OMS",
     description="GIS-OMS",
     version="0.1.0",
+    swagger_ui_parameters={"persistAuthorization": True}, # для разработки вводим API KEY один раз
 )
 
 
