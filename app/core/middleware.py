@@ -12,17 +12,16 @@ class LoggingMiddleware:
         self.app = app
 
     async def __call__(
-            self,
-            scope: Scope,
-            receive: Receive,
-            send: Send,
+        self,
+        scope: Scope,
+        receive: Receive,
+        send: Send,
     ) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
 
         request_id = uuid.uuid4().hex[:8]
-
         scope.setdefault("state", {})
         scope["state"]["request_id"] = request_id
 
@@ -33,7 +32,7 @@ class LoggingMiddleware:
         client_ip = client[0] if client else "-"
 
         started_at = time.perf_counter()
-        status_code = 500
+        status_code = status_code_default = 500
 
         async def send_wrapper(message: Message) -> None:
             nonlocal status_code
@@ -63,16 +62,13 @@ class LoggingMiddleware:
                     receive,
                     send_wrapper,
                 )
-
-            except Exception:
+            finally:
                 elapsed = (time.perf_counter() - started_at) * 1000
 
-                logger.exception(
-                    "Ошибка | {} {} | {:.2f} ms",
+                logger.info(
+                    "Ответ | {} {} | status={} | {:.2f} ms",
                     method,
                     path,
-                    status_code,
+                    status_code if status_code else status_code_default,
                     elapsed,
                 )
-
-                raise
