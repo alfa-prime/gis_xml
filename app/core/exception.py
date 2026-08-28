@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from loguru import logger
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
 def get_request_id(request: Request) -> str:
@@ -12,7 +13,7 @@ def get_request_id(request: Request) -> str:
 
 async def http_exception_handler(
     request: Request,
-    exc: HTTPException,
+    exc: StarletteHTTPException,
 ) -> JSONResponse:
     """Обрабатывает ожидаемые HTTP-ошибки."""
     request_id = get_request_id(request)
@@ -85,6 +86,6 @@ async def unexpected_exception_handler(
 
 def register_exception_handlers(app: FastAPI) -> None:
     """Регистрирует глобальные обработчики исключений."""
-    app.exception_handler(HTTPException)(http_exception_handler)
+    app.exception_handler(StarletteHTTPException)(http_exception_handler)
     app.exception_handler(RequestValidationError)(validation_exception_handler)
     app.exception_handler(Exception)(unexpected_exception_handler)
