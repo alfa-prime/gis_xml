@@ -5,6 +5,10 @@ from pydantic import Field
 
 class Settings(BaseSettings):
     app_api_key: str = Field(validation_alias="APP_API_KEY")
+    logs_level: str = Field(
+        default="INFO",
+        validation_alias="LOG_LEVEL",
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",
