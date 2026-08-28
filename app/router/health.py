@@ -12,3 +12,13 @@ router = APIRouter(prefix="/health", tags=["Health"], dependencies=[Security(ver
 )
 async def ping():
     return {"ping": "pong"}
+
+
+@router.get("/validate")
+async def validate(value: int):
+    return {"value": value}
+
+@router.get("/error")
+async def error():
+    raise RuntimeError("Тестовая ошибка")
+

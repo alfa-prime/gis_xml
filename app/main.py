@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.router import health_router
 from app.core.config import get_settings
+from app.core.exception import register_exception_handlers
 from app.core.logging import configure_logger
 from app.core.middleware import LoggingMiddleware
 
@@ -22,5 +23,6 @@ app = FastAPI(
     },
 )
 
+register_exception_handlers(app)
 app.add_middleware(LoggingMiddleware)
 app.include_router(health_router)

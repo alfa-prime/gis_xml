@@ -12,16 +12,19 @@ class LoggingMiddleware:
         self.app = app
 
     async def __call__(
-        self,
-        scope: Scope,
-        receive: Receive,
-        send: Send,
+            self,
+            scope: Scope,
+            receive: Receive,
+            send: Send,
     ) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
 
         request_id = uuid.uuid4().hex[:8]
+
+        scope.setdefault("state", {})
+        scope["state"]["request_id"] = request_id
 
         method = scope["method"]
         path = scope["path"]
@@ -68,17 +71,8 @@ class LoggingMiddleware:
                     "Ошибка | {} {} | {:.2f} ms",
                     method,
                     path,
+                    status_code,
                     elapsed,
                 )
 
                 raise
-
-            elapsed = (time.perf_counter() - started_at) * 1000
-
-            logger.info(
-                "Ответ | {} {} | status={} | {:.2f} ms",
-                method,
-                path,
-                status_code,
-                elapsed,
-            )
