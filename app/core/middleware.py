@@ -38,6 +38,12 @@ class LoggingMiddleware:
             if message["type"] == "http.response.start":
                 status_code = message["status"]
 
+                headers = list(message.get("headers", []))
+                headers.append(
+                    (b"x-request-id", request_id.encode("utf-8"))
+                )
+                message["headers"] = headers
+
             await send(message)
 
         with logger.contextualize(request_id=request_id):
