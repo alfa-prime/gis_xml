@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gis-oms-xml
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
