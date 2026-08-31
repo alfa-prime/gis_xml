@@ -2,7 +2,7 @@ import httpx
 from fastapi import FastAPI
 from loguru import logger
 
-from app.core import get_settings
+from app.core.config import get_settings
 
 
 async def init_gateway_client(app: FastAPI) -> None:
