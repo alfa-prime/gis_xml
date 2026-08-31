@@ -6,6 +6,7 @@ from loguru import logger
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.core.error import (
+    GatewayInvalidResponseError,
     GatewayResponseError,
     GatewayUnavailableError,
 )
@@ -123,6 +124,22 @@ async def gateway_response_exception_handler(
     )
 
 
+async def gateway_invalid_response_exception_handler(
+    request: Request,
+    exc: GatewayInvalidResponseError,
+) -> JSONResponse:
+    """Обрабатывает некорректный ответ шлюза ЕВМИАС."""
+    request_id = get_request_id(request)
+
+    return JSONResponse(
+        status_code=status.HTTP_502_BAD_GATEWAY,
+        content={
+            "detail": "Шлюз ЕВМИАС вернул некорректный ответ",
+            "request_id": request_id,
+        },
+    )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Регистрирует глобальные обработчики исключений."""
     app.exception_handler(StarletteHTTPException)(http_exception_handler)
@@ -135,4 +152,9 @@ def register_exception_handlers(app: FastAPI) -> None:
         gateway_response_exception_handler
     )
 
+    app.exception_handler(GatewayInvalidResponseError)(
+        gateway_invalid_response_exception_handler
+    )
+
     app.exception_handler(Exception)(unexpected_exception_handler)
+

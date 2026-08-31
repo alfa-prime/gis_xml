@@ -14,6 +14,7 @@ from app.core.config import get_settings
 from app.schema.gateway import GatewayRequest
 
 from app.core.error import (
+    GatewayInvalidResponseError,
     GatewayResponseError,
     GatewayUnavailableError,
 )
@@ -123,7 +124,24 @@ class GatewayService:
             elapsed_ms,
         )
 
-        return response.json() if response.content else {}
+        try:
+            data = response.json() if response.content else {}
+
+        except ValueError as exc:
+            logger.error(
+                (
+                    "ЕВМИАС | некорректный ответ | class={} | method={} | "
+                    "status={} | content_type={}"
+                ),
+                payload.params.c,
+                payload.params.m,
+                response.status_code,
+                response.headers.get("content-type", "-"),
+            )
+
+            raise GatewayInvalidResponseError() from exc
+
+        return data
 
     @retry(
         stop=stop_after_attempt(RETRY_ATTEMPTS),
