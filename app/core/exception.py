@@ -18,8 +18,8 @@ def get_request_id(request: Request) -> str:
 
 
 async def http_exception_handler(
-        request: Request,
-        exc: StarletteHTTPException,
+    request: Request,
+    exc: StarletteHTTPException,
 ) -> JSONResponse:
     """Обрабатывает ожидаемые HTTP-ошибки."""
     request_id = get_request_id(request)
@@ -43,8 +43,8 @@ async def http_exception_handler(
 
 
 async def validation_exception_handler(
-        request: Request,
-        exc: RequestValidationError,
+    request: Request,
+    exc: RequestValidationError,
 ) -> JSONResponse:
     """Обрабатывает ошибки валидации входных данных."""
     request_id = get_request_id(request)
@@ -67,8 +67,8 @@ async def validation_exception_handler(
 
 
 async def unexpected_exception_handler(
-        request: Request,
-        exc: Exception,
+    request: Request,
+    exc: Exception,
 ) -> JSONResponse:
     """Обрабатывает необработанные исключения приложения."""
     request_id = get_request_id(request)
@@ -148,13 +148,10 @@ def register_exception_handlers(app: FastAPI) -> None:
     app.exception_handler(GatewayUnavailableError)(
         gateway_unavailable_exception_handler
     )
-    app.exception_handler(GatewayResponseError)(
-        gateway_response_exception_handler
-    )
+    app.exception_handler(GatewayResponseError)(gateway_response_exception_handler)
 
     app.exception_handler(GatewayInvalidResponseError)(
         gateway_invalid_response_exception_handler
     )
 
     app.exception_handler(Exception)(unexpected_exception_handler)
-

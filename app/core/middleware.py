@@ -41,9 +41,7 @@ class LoggingMiddleware:
                 status_code = message["status"]
 
                 headers = list(message.get("headers", []))
-                headers.append(
-                    (b"x-request-id", request_id.encode("utf-8"))
-                )
+                headers.append((b"x-request-id", request_id.encode("utf-8")))
                 message["headers"] = headers
 
             await send(message)

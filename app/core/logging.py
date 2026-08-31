@@ -9,9 +9,8 @@ class InterceptHandler(logging.Handler):
 
     def emit(self, record: logging.LogRecord) -> None:
         # Не дублируем traceback HTTP-ошибок: их уже пишет глобальный handler.
-        if (
-                record.name.startswith("uvicorn")
-                and record.getMessage().startswith("Exception in ASGI application")
+        if record.name.startswith("uvicorn") and record.getMessage().startswith(
+            "Exception in ASGI application"
         ):
             return
 

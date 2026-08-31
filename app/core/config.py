@@ -5,9 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_api_key: str = Field(
-        validation_alias="APP_API_KEY"
-    )
+    app_api_key: str = Field(validation_alias="APP_API_KEY")
     logs_level: str = Field(
         default="INFO",
         validation_alias="LOGS_LEVEL",

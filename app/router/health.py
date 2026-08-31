@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Security
 
-from app.core.dependencies import GatewayServiceDep
-from app.core.dependencies import verify_api_key
+from app.core.dependencies import GatewayServiceDep, verify_api_key
 from app.schema.gateway import GatewayRequest
 
 router = APIRouter(
@@ -24,12 +23,11 @@ async def ping():
     path="/gateway",
     summary="Проверка связи со шлюзом API",
     description=(
-            "Отправляет тестовый запрос на API-шлюз "
-            "для проверки связи и аутентификации."
+        "Отправляет тестовый запрос на API-шлюз для проверки связи и аутентификации."
     ),
 )
 async def check_gateway_connection(
-        gateway_service: GatewayServiceDep,
+    gateway_service: GatewayServiceDep,
 ):
     payload = GatewayRequest.model_validate(
         {

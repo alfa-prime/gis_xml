@@ -8,7 +8,6 @@ from fastapi.security import APIKeyHeader
 from app.core.config import get_settings
 from app.service.gateway import GatewayService
 
-
 settings = get_settings()
 
 api_key_header = APIKeyHeader(

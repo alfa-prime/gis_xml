@@ -13,5 +13,6 @@ class GatewayResponseError(GatewayError):
         self.status_code = status_code
         super().__init__(f"Gateway returned HTTP {status_code}")
 
+
 class GatewayInvalidResponseError(GatewayError):
     """Шлюз ЕВМИАС вернул некорректные данные."""

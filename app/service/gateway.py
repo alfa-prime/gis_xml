@@ -11,13 +11,12 @@ from tenacity import (
 )
 
 from app.core.config import get_settings
-from app.schema.gateway import GatewayRequest
-
 from app.core.error import (
     GatewayInvalidResponseError,
     GatewayResponseError,
     GatewayUnavailableError,
 )
+from app.schema.gateway import GatewayRequest
 
 settings = get_settings()
 
@@ -38,11 +37,7 @@ def log_gateway_retry(retry_state: RetryCallState) -> None:
 
     payload = retry_state.args[1]
 
-    exception = (
-        retry_state.outcome.exception()
-        if retry_state.outcome
-        else None
-    )
+    exception = retry_state.outcome.exception() if retry_state.outcome else None
 
     logger.warning(
         (
@@ -68,8 +63,8 @@ class GatewayService:
         self._client = client
 
     async def make_request(
-            self,
-            payload: GatewayRequest,
+        self,
+        payload: GatewayRequest,
     ) -> dict:
         started_at = perf_counter()
 
@@ -82,13 +77,9 @@ class GatewayService:
         try:
             response = await self._send_request(payload)
 
-
         except httpx.HTTPStatusError as exc:
             logger.error(
-                (
-                    "ЕВМИАС | ошибка ответа | class={} | method={} | "
-                    "status={}"
-                ),
+                ("ЕВМИАС | ошибка ответа | class={} | method={} | status={}"),
                 payload.params.c,
                 payload.params.m,
                 exc.response.status_code,
@@ -100,10 +91,7 @@ class GatewayService:
 
         except RETRYABLE_EXCEPTIONS as exc:
             logger.error(
-                (
-                    "ЕВМИАС | недоступен | class={} | method={} | "
-                    "type={}"
-                ),
+                ("ЕВМИАС | недоступен | class={} | method={} | type={}"),
                 payload.params.c,
                 payload.params.m,
                 type(exc).__name__,
@@ -114,10 +102,7 @@ class GatewayService:
         elapsed_ms = (perf_counter() - started_at) * 1000
 
         logger.info(
-            (
-                "ЕВМИАС | ответ | class={} | method={} | "
-                "status={} | {:.2f} ms"
-            ),
+            ("ЕВМИАС | ответ | class={} | method={} | status={} | {:.2f} ms"),
             payload.params.c,
             payload.params.m,
             response.status_code,
@@ -151,8 +136,8 @@ class GatewayService:
         before_sleep=log_gateway_retry,
     )
     async def _send_request(
-            self,
-            payload: GatewayRequest,
+        self,
+        payload: GatewayRequest,
     ) -> httpx.Response:
         response = await self._client.post(
             url=self.GATEWAY_ENDPOINT,
