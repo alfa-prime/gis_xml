@@ -103,9 +103,6 @@ async def gateway_unavailable_exception_handler(
             "detail": "Шлюз ЕВМИАС временно недоступен",
             "request_id": request_id,
         },
-        headers={
-            "X-Request-ID": request_id,
-        },
     )
 
 
@@ -122,9 +119,6 @@ async def gateway_response_exception_handler(
             "detail": "Ошибка ответа шлюза ЕВМИАС",
             "upstream_status": exc.status_code,
             "request_id": request_id,
-        },
-        headers={
-            "X-Request-ID": request_id,
         },
     )
 
