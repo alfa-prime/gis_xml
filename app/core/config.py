@@ -5,10 +5,32 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_api_key: str = Field(validation_alias="APP_API_KEY")
+    app_api_key: str = Field(
+        validation_alias="APP_API_KEY"
+    )
     logs_level: str = Field(
         default="INFO",
         validation_alias="LOGS_LEVEL",
+    )
+    gateway_url: str = Field(
+        validation_alias="GATEWAY_URL",
+    )
+
+    gateway_request_endpoint: str = Field(
+        validation_alias="GATEWAY_REQUEST_ENDPOINT",
+    )
+
+    gateway_api_key: str = Field(
+        validation_alias="GATEWAY_API_KEY",
+    )
+
+    gateway_session_id: str = Field(
+        validation_alias="GATEWAY_SESSION_ID",
+    )
+
+    request_timeout: float = Field(
+        default=30.0,
+        validation_alias="REQUEST_TIMEOUT",
     )
 
     model_config = SettingsConfigDict(

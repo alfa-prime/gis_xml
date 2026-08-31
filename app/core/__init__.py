@@ -1,7 +1,8 @@
 from app.core.config import get_settings
-from app.core.dependencies import verify_api_key
+from app.core.dependencies import APIKeyDep, GatewayServiceDep
 
 __all__ = [
-    'verify_api_key',
+    'APIKeyDep',
+    'GatewayServiceDep',
     'get_settings'
 ]

@@ -12,8 +12,8 @@ def get_request_id(request: Request) -> str:
 
 
 async def http_exception_handler(
-    request: Request,
-    exc: StarletteHTTPException,
+        request: Request,
+        exc: StarletteHTTPException,
 ) -> JSONResponse:
     """Обрабатывает ожидаемые HTTP-ошибки."""
     request_id = get_request_id(request)
@@ -37,8 +37,8 @@ async def http_exception_handler(
 
 
 async def validation_exception_handler(
-    request: Request,
-    exc: RequestValidationError,
+        request: Request,
+        exc: RequestValidationError,
 ) -> JSONResponse:
     """Обрабатывает ошибки валидации входных данных."""
     request_id = get_request_id(request)
@@ -61,8 +61,8 @@ async def validation_exception_handler(
 
 
 async def unexpected_exception_handler(
-    request: Request,
-    exc: Exception,
+        request: Request,
+        exc: Exception,
 ) -> JSONResponse:
     """Обрабатывает необработанные исключения приложения."""
     request_id = get_request_id(request)
