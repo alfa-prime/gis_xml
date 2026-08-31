@@ -50,7 +50,6 @@ def configure_logger(log_level: str = "INFO") -> None:
             "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
             "<level>{level: <8}</level> | "
             "<cyan>{extra[request_id]}</cyan> | "
-            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
             "<level>{message}</level>"
         ),
         colorize=True,
@@ -66,7 +65,6 @@ def configure_logger(log_level: str = "INFO") -> None:
             "{time:YYYY-MM-DD HH:mm:ss.SSS} | "
             "{level: <8} | "
             "{extra[request_id]} | "
-            "{name}:{function}:{line} | "
             "{message}"
         ),
         rotation="10 MB",
@@ -100,6 +98,10 @@ def configure_logger(log_level: str = "INFO") -> None:
         level=0,
         force=True,
     )
+
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.INFO)
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
 
     for logger_name in (
         "uvicorn",
