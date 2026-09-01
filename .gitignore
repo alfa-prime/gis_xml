@@ -40,3 +40,4 @@ htmlcov/
 
 #Логи
 logs/
+debug/
