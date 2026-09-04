@@ -1,4 +1,5 @@
 from time import perf_counter
+from typing import Any
 
 import httpx
 from loguru import logger
@@ -65,7 +66,7 @@ class GatewayService:
     async def make_request(
         self,
         payload: GatewayRequest,
-    ) -> list[dict]:
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         started_at = perf_counter()
 
         logger.info(
@@ -79,7 +80,7 @@ class GatewayService:
 
         except httpx.HTTPStatusError as exc:
             logger.error(
-                ("ЕВМИАС | ошибка ответа | class={} | method={} | status={}"),
+                "ЕВМИАС | ошибка ответа | class={} | method={} | status={}",
                 payload.params.c,
                 payload.params.m,
                 exc.response.status_code,
@@ -91,7 +92,7 @@ class GatewayService:
 
         except RETRYABLE_EXCEPTIONS as exc:
             logger.error(
-                ("ЕВМИАС | недоступен | class={} | method={} | type={}"),
+                "ЕВМИАС | недоступен | class={} | method={} | type={}",
                 payload.params.c,
                 payload.params.m,
                 type(exc).__name__,
@@ -102,7 +103,7 @@ class GatewayService:
         elapsed_ms = (perf_counter() - started_at) * 1000
 
         logger.info(
-            ("ЕВМИАС | ответ | class={} | method={} | status={} | {:.2f} ms"),
+            "ЕВМИАС | ответ | class={} | method={} | status={} | {:.2f} ms",
             payload.params.c,
             payload.params.m,
             response.status_code,
