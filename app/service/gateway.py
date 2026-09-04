@@ -65,7 +65,7 @@ class GatewayService:
     async def make_request(
         self,
         payload: GatewayRequest,
-    ) -> dict:
+    ) -> list[dict]:
         started_at = perf_counter()
 
         logger.info(

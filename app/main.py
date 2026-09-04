@@ -10,7 +10,7 @@ from app.core.config import get_settings
 from app.core.exception import register_exception_handlers
 from app.core.logging import configure_logger
 from app.core.middleware import LoggingMiddleware
-from app.router import health_router
+from app.router import debug_router, health_router
 
 settings = get_settings()
 configure_logger(settings.logs_level)
@@ -42,3 +42,4 @@ app = FastAPI(
 register_exception_handlers(app)
 app.add_middleware(LoggingMiddleware)
 app.include_router(health_router)
+app.include_router(debug_router)
